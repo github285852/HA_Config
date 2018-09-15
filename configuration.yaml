@@ -1,0 +1,231 @@
+homeassistant:
+  # Name of the location where Home Assistant is running
+  name: SmartHome
+  # Location required to calculate the time the sun rises and sets
+  latitude: 22.726017
+  longitude: 114.254455
+ # Impacts weather/sunrise data (altitude above sea level in meters)
+  elevation: 0
+  # metric for Metric, imperial for Imperial
+  unit_system: metric
+  # Pick yours from here: http://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+  time_zone: Asia/Shanghai
+  # Customization file
+  customize: !include customize.yaml
+
+# Show links to resources in log and frontend
+introduction:
+
+# Enables the frontend
+frontend:
+#  development_repo: /home/pi/home-assistant-polymer
+#
+#  extra_html_url:
+#    - /local/custom_ui/state-card-my-custom-light.html
+
+#  javascript_version: latest
+
+  themes:
+    night:  #主题名称，英文
+      # 主界面 #
+      primary-color: "#1DE9B6" # 主 UI 字体颜色
+      primary-background-color: "#303030" # 其他部件背景色 (dialogs, e.t.c)
+      secondary-background-color: "#303030" # 主 UI 背景颜色
+      paper-card-background-color: "#424242" # 卡片背景颜色
+      paper-item-icon-color: "#1DE9B6" # Icon colour
+      primary-text-color: "#FFFFFF" # 首选字体颜色
+      secondary-text-color: "rgba(255, 255, 255, 0.7)" # 次字体颜色
+      disabled-text-color: "rgba(255, 255, 255, 0.5)" # Disabled text colour
+      divider-color: "rgba(255, 255, 255, 0.12)" # Divider colour
+      paper-card-header-color: "#FFFFFF" # 卡片标题颜色
+      # 开关 #
+      paper-toggle-button-checked-ink-color: "#1DE9B6"
+      paper-toggle-button-checked-button-color: "#1DE9B6"
+      paper-toggle-button-checked-bar-color: "#1DE9B6"
+      # Sliders #
+      paper-slider-knob-color: "#1DE9B6"
+      paper-slider-knob-start-color: "#1DE9B6"
+      paper-slider-pin-color: "#1DE9B6"
+      paper-slider-active-color: "#1DE9B6"
+      paper-slider-secondary-color: "#33F2D8"
+
+# Enables configuration UI
+config:
+
+http:
+  # Secrets are defined in the file secrets.yaml
+  api_password: !secret http_password
+  # Uncomment this if you are using SSL/TLS, running in Docker container, etc.
+  # base_url: example.duckdns.org:8123
+
+# Checks for available updates
+# Note: This component will send some information about your system to
+# the developers to assist with development of Home Assistant.
+# For more information, please see:
+# https://home-assistant.io/blog/2016/10/25/explaining-the-updater/
+updater:
+  # Optional, allows Home Assistant developers to focus on popular components.
+  # include_used_components: true
+
+# Discover some devices automatically
+discovery:
+
+# Allows you to issue voice commands from the frontend in enabled browsers
+conversation:
+
+# Enables support for tracking state changes over time
+history:
+
+# View all events in a logbook
+logbook:
+
+# Enables a map showing the location of tracked devices
+map:
+
+# Track the sun
+sun:
+
+weather:
+  - platform: yweather
+
+# Weather prediction
+sensor:
+  - platform: yweather
+    name: Weather
+    monitored_conditions:
+      - temperature     #气温
+      - weather
+      - humidity        #湿度 pressure windDirection windSpeed
+      - temp_min
+      - temp_max
+
+  - platform: command_line
+    name: PI CPU Temperature
+    command: "cat /sys/class/thermal/thermal_zone0/temp"
+    unit_of_measurement: "°C"
+    value_template: '{{ value | multiply(0.001) }}'
+
+  - platform: mqtt
+    state_topic: "zq1122wg/resive/rf433/8397176"
+    name: "RF433_Resiver"
+    value_template: '{{value_json.data}}'
+    json_attributes:
+      - data
+      - bits
+      - nums
+
+# Text to speech
+tts:
+  - platform: baidu
+    app_id: 10759284
+    api_key: 5pGHL0VUmfsUCn0P21IU7Fh3
+    secret_key: I4RymDXG4r3itYevttO9lrlbtPTgtQqt
+    speed: 5
+    pitch: 5
+    volume: 15
+    person: 0
+
+switch:
+  - platform: rpi_gpio
+    ports:
+      11:  Light
+      12: Office
+
+  - platform: mqtt
+    command_topic: "zq1122wg/switch/8397176"
+    state_topic:  "zq1122wg/state/8397176"
+    name: water pump
+
+#  - platform: zq1112wg
+#    name: HallKey2
+#    data: 114
+#    timers: 8
+
+mqtt:
+  broker: m14.cloudmqtt.com
+  port: 17429
+  username: mbivhzli
+  password: d5pXYDXe_grl
+
+
+#  - platform: zq1112wg
+#    name: RoomKey1 
+#    data: 224
+#    timers: 4
+
+binary_sensor:
+  - platform: rpi_gpio
+    ports:
+      13: PIR Office
+      14: PIR Bedroom
+ 
+# Cloud
+cloud:
+
+homekit:
+  pincode: '123-45-678'
+
+panel_iframe:
+  netgear:
+    title: Router
+    icon: mdi:router-wireless
+    url: http://192.168.1.1
+
+  configurator:
+    title: Configurator
+    icon: mdi:wrench
+    url: http://192.168.1.109:3218
+
+panel_custom:
+  - name: hello
+    sidebar_title: Hello World
+    sidebar_icon: mdi:hand-pointing-right
+    url_path: hello
+
+  - name: floorplan
+    sidebar_title: floorplan
+    sidebar_icon: mdi:hand-pointing-right
+    url_path: floorplan
+
+#device_tracker:
+#  - platform: tplink #（按需填写，小米为“xiaomi”，Netgear为“netgear”，TP-LINK为“tplink”）
+#    host: 192.168.1.1 #路由器Ip
+#    username: admin#管理员账号
+#    password: fpgastm32 #管理员密码
+    #track_new_devices: no #是否自动添加新设备
+
+#redpoint:
+
+media_player:
+  - platform: vlc
+
+zq1112wg:
+  interface: /dev/ttyUSB0 
+  baude: 115200
+  device:
+  - type: switch
+    name: HallKey1
+    data: 124
+    timers: 9
+
+  - type: switch
+    name: HallKey2
+    data: 114 
+    timers: 9
+
+  - type: switch
+    name: RoomKey
+    data: 214
+    timers: 9
+
+  - type: sensor
+    name: temp
+    addr: 224
+
+#mqtt_eventstream:
+#  publish_topic: zq1122wg/send/rf433/office/01
+#  subscribe_topic: zq1122wg/resive/rf433/office/01
+
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
