@@ -1,0 +1,8 @@
+sensor.pi_cpu_temperature:
+  entity_picture: https://example.com/images/nest.jpg
+  friendly_name: PI_T
+  icon: mdi:home
+
+#switch.Light:
+#  custom_ui_state_card: state-card-my-custom-light
+

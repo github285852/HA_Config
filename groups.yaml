@@ -1,0 +1,7 @@
+device_info_view:
+  name: DEVICES INFO
+  view: yes
+  entities:
+   - sensor.pi_cpu_temperature
+
+

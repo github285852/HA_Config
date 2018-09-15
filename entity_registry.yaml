@@ -1,0 +1,24 @@
+switch.roomkey1:
+  platform: zq1112wg
+  unique_id: RoomKey1
+switch.hallkey2:
+  platform: zq1112wg
+  unique_id: HallKey2
+switch.hallkey1:
+  platform: zq1112wg
+  unique_id: HallKey1
+zq1112wg.roomkey:
+  platform: zq1112wg
+  unique_id: roomkey
+zq1112wg.roomkey1:
+  platform: zq1112wg
+  unique_id: roomkey1
+zq1112wg.hallkey1:
+  platform: zq1112wg
+  unique_id: HallKey1
+zq1112wg.hallkey2:
+  platform: zq1112wg
+  unique_id: HallKey2
+zq1112wg.roomkey_2:
+  platform: zq1112wg
+  unique_id: RoomKey

@@ -1,0 +1,48 @@
+- alias: weather_report
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '07:40:00'
+
+    - platform: time
+      at: '08:00:00'
+
+#  condition:
+#    condition: numeric_state
+#    entity_id: senor.weather_temperature
+#    above: 34 #触发条件 高于 34
+
+  action:
+    - service: tts.baidu_say
+      data_template:
+        entity_id: media_player.vlc
+        message: "现在播报天气。温度，{{states('sensor.weather_temperature')}}°C，湿度{{states('sensor.weather_humidity')}}"
+
+
+- alias: water pump on
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '07:45:00'
+
+    - platform: time   
+      at: '14:00:00'
+   
+  action:
+    service: switch.turn_on
+    entity_id: switch.water_pump
+
+- alias: water pump off
+  initial_state: true
+  trigger:
+    - platform: time
+      at: '10:00:00'
+
+    - platform: time
+      at: '19:00:00'
+
+  action:
+    service: switch.turn_off
+    entity_id: switch.water_pump
+
+
